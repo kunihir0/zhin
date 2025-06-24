@@ -1,0 +1,49 @@
+"""
+Scrapers for courts.navajo-nsn.gov.
+"""
+import os
+from pathlib import Path
+from playwright.async_api import async_playwright
+from logger import get_logger
+from scrapers.nnols_scrapers import download_file
+
+log = get_logger(__name__)
+
+async def scrape_supreme_court_opinions():
+    """
+    Scrapes Supreme Court opinions from courts.navajo-nsn.gov.
+    """
+    async with async_playwright() as p:
+        browser = await p.chromium.launch()
+        page = await browser.new_page()
+        try:
+            await page.goto("http://courts.navajo-nsn.gov/supreme-court-opinions/")
+            
+            accordion_items = await page.locator(".card").all()
+            log.info(f"Found {len(accordion_items)} accordion items.")
+            for item in accordion_items:
+                title_element = item.locator("h5.title .text")
+                title = await title_element.inner_text()
+                
+                # Click the title to expand the content
+                await title_element.click()
+                await page.wait_for_timeout(500)  # wait for animation
+
+                content = item.locator(".card-body")
+                log.info(f"Title: {title}")
+                
+                # also get the pdf links
+                pdf_links = await content.locator('a[href$=".pdf"]').all()
+                for link in pdf_links:
+                    pdf_url = await link.get_attribute('href')
+                    if pdf_url:
+                        file_name = pdf_url.split("/")[-1]
+                        download_path = Path("data/courts/supreme_court") / file_name
+                        await download_file(pdf_url, download_path)
+
+                log.info(f"Content: {await content.inner_text()}")
+                log.info("-" * 20)
+        except Exception as e:
+            log.error(f"Failed to scrape supreme court opinions: {e}")
+        finally:
+            await browser.close()

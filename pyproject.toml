@@ -1,0 +1,30 @@
+[project]
+name = "zhin"
+version = "0.1.0"
+description = "gov tracker"
+authors = [
+    {name = "kunihir0", email = "kunihiro@tutanota.com"},
+]
+dependencies = ["playwright>=1.52.0", "google-genai>=1.21.1", "toml>=0.10.2"]
+requires-python = ">=3.9"
+readme = "README.md"
+license = {text = "MIT"}
+
+[project.scripts]
+zhin = "zhin.main:main"
+
+[project.optional-dependencies]
+test = [
+    "pytest>=8.3.2",
+    "pytest-playwright>=0.7.0",
+    "pytest-asyncio>=0.21.0",
+    "anyio>=4.0.0",
+]
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+
+[tool.pdm]
+distribution = true
