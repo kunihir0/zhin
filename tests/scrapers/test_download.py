@@ -5,7 +5,6 @@ import pytest
 from pathlib import Path
 from scrapers.nnols_scrapers import download_file
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     "url",
     [
@@ -15,11 +14,11 @@ from scrapers.nnols_scrapers import download_file
         "https://www.nnols.org/wp-content/uploads/2022/05/21-26.pdf",
     ],
 )
-async def test_download_file(url: str, tmp_path: Path):
+async def test_download_file(url: str, tmp_path: Path, page):
     """
     Tests that the download_file function downloads a file.
     """
     file_name = url.split("/")[-1]
     download_path = tmp_path / file_name
-    await download_file(url, download_path)
+    await download_file(page, url, download_path)
     assert download_path.exists()

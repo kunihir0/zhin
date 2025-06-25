@@ -5,20 +5,23 @@ description = "gov tracker"
 authors = [
     {name = "kunihir0", email = "kunihiro@tutanota.com"},
 ]
-dependencies = ["playwright>=1.52.0", "google-genai>=1.21.1", "toml>=0.10.2"]
+dependencies = ["playwright>=1.52.0", "google-genai>=1.21.1", "toml>=0.10.2", "httpx>=0.27.0"]
 requires-python = ">=3.9"
 readme = "README.md"
 license = {text = "MIT"}
 
 [project.scripts]
-zhin = "zhin.main:main"
+zhin = "main:main"
+zhin-press = "main:run_press_scraper"
+zhin-council = "main:run_council_scraper"
+zhin-opvp = "main:run_opvp_scraper"
 
-[project.optional-dependencies]
+[tool.pdm.dev-dependencies]
 test = [
     "pytest>=8.3.2",
     "pytest-playwright>=0.7.0",
     "pytest-asyncio>=0.21.0",
-    "anyio>=4.0.0",
+    "anyio>=4.0.0"
 ]
 
 [build-system]
@@ -28,3 +31,4 @@ build-backend = "pdm.backend"
 
 [tool.pdm]
 distribution = true
+source-includes = ["src/"]
