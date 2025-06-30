@@ -7,7 +7,8 @@ from scrapers.navajonationcouncil_scrapers import scrape_bills_and_resolutions, 
 from scrapers.dibb_scrapers import scrape_legislative_metadata
 from scrapers.courts_scrapers import scrape_supreme_court_opinions
 from scrapers.nnc_press_scrapers import scrape_press_releases
-from scrapers.opvp_scrapers import scrape_opvp_roster
+from scrapers.opvp_scrapers import scrape_opvp_roster, scrape_opvp_press_releases
+from scrapers.nndoj_scrapers import scrape_nndoj_roster
 from logger import get_logger
 
 log = get_logger(__name__)
@@ -46,8 +47,29 @@ def run_opvp_scraper():
     """
     Synchronous entry point for the OPVP scraper.
     """
+    async def opvp_main():
+        # Run roster and press release scrapers concurrently
+        await asyncio.gather(
+            scrape_opvp_roster(),
+            scrape_opvp_press_releases()
+        )
+
     try:
-        asyncio.run(scrape_opvp_roster())
+        asyncio.run(opvp_main())
+    except KeyboardInterrupt:
+        log.info("Exiting...")
+
+
+def run_nndoj_scraper():
+    """
+    Synchronous entry point for the NNDOJ scraper.
+    """
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--headless", action="store_true")
+    args = parser.parse_args()
+    try:
+        asyncio.run(scrape_nndoj_roster(headless=args.headless))
     except KeyboardInterrupt:
         log.info("Exiting...")
 

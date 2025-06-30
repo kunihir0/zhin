@@ -36,7 +36,19 @@
     *   [x] Scrape the opinions page for PDF links
     *   [x] Download and save all opinion PDFs
     *   [x] Implement error handling and logging
-    *   [x] Unit tests for Supreme Court opinions scraper
+    *   [ ] Unit tests for Supreme Court opinions scraper
+
+*   [x] **Scraper for opvp.navajo-nsn.gov (Office of the President and Vice President)**
+    *   [x] Scrape the administration roster
+    *   [x] Scrape press releases
+    *   [x] Implement error handling and logging
+    *   [ ] Unit tests for OPVP scraper
+
+*   [x] **Scraper for nndoj.navajo-nsn.gov (Navajo Nation Department of Justice)**
+    *   [x] Scrape press releases
+    *   [x] Scrape staff roster
+    *   [x] Implement error handling and logging
+    *   [ ] Unit tests for NNDOJ scraper
 
 ## Phase 2: Data Processing and Storage
 

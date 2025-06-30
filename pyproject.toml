@@ -15,6 +15,7 @@ zhin = "main:main"
 zhin-press = "main:run_press_scraper"
 zhin-council = "main:run_council_scraper"
 zhin-opvp = "main:run_opvp_scraper"
+zhin-nndoj = "main:run_nndoj_scraper"
 
 [tool.pdm.dev-dependencies]
 test = [
