@@ -22,7 +22,7 @@
 
 *   [x] **Scraper for dibb.nnols.org (Legislative Metadata)**
     *   [x] Scrape for bill metadata (sponsors, status, history)
-    *   [x] Correlrate metadata with bills from navajonationcouncil.org
+    *   [x] Correlate metadata with bills from navajonationcouncil.org
     *   [x] Implement error handling and logging
     *   [x] Unit tests for dibb.nnols.org scraper
 
@@ -50,30 +50,40 @@
     *   [x] Implement error handling and logging
     *   [ ] Unit tests for NNDOJ scraper
 
-## Phase 2: Data Processing and Storage
+## Phase 2: Data Processing and Storage (Revised)
 
 ### Milestones
 
-*   [ ] **PDF Processing Pipeline**
-    *   [ ] Implement PDF text extraction for all scraped documents
-    *   [ ] Clean and normalize extracted text
-    *   [ ] Unit tests for PDF processing
+*   [ ] **Text Extraction & Chunking**
+    *   [ ] Implement a robust text extraction pipeline for all scraped documents (PDFs, press release HTML) using libraries like PyMuPDF and BeautifulSoup.
+    *   [ ] Clean and normalize the extracted text.
+    *   [ ] Implement a strategy to chunk text into semantically complete units (e.g., by statute section for code, by paragraph for articles/opinions).
+    *   [ ] Unit tests for extraction and chunking.
 
-*   [ ] **NLP for Statute Identification**
-    *   [ ] Develop regex/NLP model to identify statute citations in resolutions and court opinions
-    *   [ ] Test and refine the model on a sample set of documents
-    *   [ ] Unit tests for NLP model
+*   [ ] **Metadata & Relationship Extraction (NLP)**
+    *   [ ] Develop regex/NLP model to extract key entities: specific citations from legal docs, and names/topics from press releases.
+    *   [ ] Extract other key metadata: resolution numbers, case names, press release headlines, dates, etc.
+    *   [ ] Test and refine the model on a sample set of documents.
+    *   [ ] Unit tests for metadata extraction.
 
-*   [ ] **Diffing Engine**
-    *   [ ] Implement logic to compare amended code with the base code
-    *   [ ] Generate diffs to show changes
-    *   [ ] Unit tests for diffing engine
+*   [ ] **Vector Embedding (Local)**
+    *   [ ] Set up local embedding via Ollama using Qwen/Qwen3-Embedding-0.6B-GGUF.
+    *   [ ] Develop a client to interface with the local Ollama embedding endpoint.
+    *   [ ] Create a process to convert all text chunks (from legal docs and press articles) into vector embeddings.
+    *   [ ] Implement error handling and batching for the embedding process.
 
-*   [ ] **Database Schema and Setup**
-    *   [ ] Set up local SQLite database for development
-    *   [ ] Design and implement schema for Qdrant
-    *   [ ] Write scripts to load processed data into the database
-    *   [ ] Unit tests for database loading
+*   [ ] **LLM-Powered Smart Diffing Engine**
+    *   [ ] Set up local LLM for analysis via Ollama using unsloth/gemma-3n-E4B-it-GGUF.
+    *   [ ] Develop prompts to instruct the LLM to analyze changes between two versions of a statute.
+    *   [ ] Implement logic to feed the original and amended text to the LLM for a "smart check."
+    *   [ ] The LLM will generate a summary of the change and classify its type (e.g., typo fix, clarification, substantive legal change).
+    *   [ ] Store the LLM's analysis alongside a standard difflib output.
+    *   [ ] Unit tests for the smart diffing engine.
+
+*   [ ] **Database Upsert**
+    *   [ ] Set up local SQLite DB and production Qdrant vector DB.
+    *   [ ] Design final schema for Qdrant to store vectors alongside their corresponding text chunks and rich metadata (for all document types).
+    *   [ ] Write and test scripts to "upsert" all processed data into the databases.
 
 ## Phase 3: Backend Development (API)
 
@@ -81,14 +91,15 @@
 
 *   [ ] **FastAPI Application Setup**
     *   [ ] Initialize FastAPI project structure
-    *   [ ] Implement configuration management using `config.toml`
+    *   [ ] Implement configuration management using config.toml
     *   [ ] Set up centralized logging
 
 *   [ ] **API Endpoints**
-    *   [ ] Endpoint for "living code" with version history
+    *   [ ] Endpoint for "living code" with version history (using diffs)
     *   [ ] Endpoint for bill tracking
     *   [ ] Endpoint for council member information
-    *   [ ] Endpoint for court opinions
+    *   [ ] Endpoint for court opinions and press releases
+    *   [ ] Endpoint for semantic search queries to Qdrant
     *   [ ] Endpoint for "Mind Map" data
     *   [ ] Implement API documentation (e.g., Swagger UI)
     *   [ ] Unit and integration tests for all endpoints
