@@ -9,6 +9,7 @@ from scrapers.courts_scrapers import scrape_supreme_court_opinions
 from scrapers.nnc_press_scrapers import scrape_press_releases
 from scrapers.opvp_scrapers import scrape_opvp_roster, scrape_opvp_press_releases
 from scrapers.nndoj_scrapers import scrape_nndoj_roster
+from processing.pipeline import run_text_extraction_pipeline
 from logger import get_logger
 
 log = get_logger(__name__)
@@ -56,6 +57,15 @@ def run_opvp_scraper():
 
     try:
         asyncio.run(opvp_main())
+    except KeyboardInterrupt:
+        log.info("Exiting...")
+
+def run_phase2_pipeline():
+    """
+    Synchronous entry point for the Phase 2 processing pipeline.
+    """
+    try:
+        run_text_extraction_pipeline()
     except KeyboardInterrupt:
         log.info("Exiting...")
 
